@@ -1,0 +1,256 @@
+%template by Marcel Neunhoeffer & Sebastian Sternberg - Uni of Mannheim
+
+\documentclass[a4paper, 12pt]{article}  %khai bao document class
+
+% set up margin
+\usepackage[top = 2.5cm, bottom = 2.5cm, left = 2.5cm, right = 2.5cm]{geometry} 
+% \usepackage[utf8]{inputenc}  % language encoder
+\usepackage[utf8]{vietnam}  % vietnamese language setting
+\usepackage{multirow} % Multirow is for tables with multiple rows within one cell.
+\usepackage{booktabs} % For even nicer tables.
+\usepackage{graphicx}
+\usepackage{ulem} % for underlined format
+% packages for advanced math eqn and symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem} % for itemize
+
+% set indent of new paragraph to 0
+\usepackage{setspace}
+\setlength{\parindent}{0.5in}
+\onehalfspacing
+
+% Package to place figures where you want them.
+\usepackage{float}
+
+% The fancyhdr package let's us create nice headers.
+\usepackage{fancyhdr}
+
+%%Make header and footer
+\pagestyle{fancy} % With this command we can customize the header style.
+\fancyhf{} % This makes sure we do not have other information in our header or footer.
+
+% Header
+\lhead{\footnotesize Machine Learning 1: Homework 1}% \lhead puts text in the top left corner. \footnotesize sets our font to a smaller size.
+\rhead{\footnotesize Nguyen Anh Tu @DSEB 62}
+
+% Similar commands work for the footer (\lfoot, \cfoot and \rfoot).
+% We want to put our page number in the center.
+\cfoot{\footnotesize \thepage} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{document}
+
+% Title section of the document
+\thispagestyle{empty} % This command disables the header on the first page. 
+
+\begin{tabular}{p{12.5cm}} % This is a simple tabular environment to align your text nicely 
+{\large \bf National Economics University, Vietnam} \\
+Faculty of Mathematics Economics \\ Data Science in Economics and Business  \\ Machine Learning 1\\
+\hline % \hline produces horizontal lines.
+\\
+\end{tabular} % Our tabular environment ends here.
+
+\vspace*{0.3cm} % Now we want to add some vertical space in between the line and our title.
+
+\begin{center} % Everything within the center environment is centered.
+	{\Large \bf Homework Week 1} % <---- Don't forget to put in the right number
+	\vspace{2mm}
+	
+	{\bf Student: Nguyễn Anh Tú - ID: 11207333} % <---- Fill in your names here!
+\end{center}  
+
+\vspace{0.4cm}
+
+%%%%%%%%%%%%%%%% Problem 1:
+\section{Problem 1}
+
+Consider the following bivariate distribution \(p(x, y)\) of two discrete random variables $X$ and $Y$
+\begin{center}
+    \includegraphics[]{problem1.png}
+\end{center}
+
+Compute:
+\begin{enumerate}[label=(\alph*)]
+    \item Compute the marginal distributions $p(x)$ and $p(y)$
+    \item Compute the conditional distribution $p(x|Y=y_1)$ and $p(x|Y=y_3)$
+\end{enumerate}
+
+%%%% Solution
+\textbf{Solution.}
+\begin{enumerate}[label=(\alph*)]
+    \item Formula for marginal distribution \( \displaystyle p(X = x_i) = \sum_j p(x_i, y_j)\) \\
+    Thus marginal distributions of $p(x)$ are:
+    \begin{align*}
+    p(X = x_1) & = p(x_1, y_1) + p(x_1, y_2) + p(x_1, y_3)\\
+    & = 0.01 + 0.05 + 0.1 = 0.16 \\
+    p(X = x_2) &= 0.02 + 0.1 + 0.05 = 0.17 \\
+    p(X = x_3) &= 0.03 + 0.05 + 0.03 = 0.11 \\
+    p(X = x_4) &= 0.1 + 0.07 + 0.05 = 0.22 \\
+    p(X = x_5) &= 0.1 + 0.2 + 0.04 = 0.34
+    \end{align*}
+    
+    Similarly, marginal distributions of $p(y)$ are:
+    \begin{align*}
+    p(Y = y_1) &= p(x_1, y_1) + p(x_2, y_1) + p(x_3, y_1) + p(x_4, y_1) + p(x_5, y_1)\\
+    & = 0.01 + 0.02 + 0.03 + 0.1 + 0.1 = 0.26 \\
+    p(Y = y_2) &= 0.05 + 0.1 + 0.05 + 0.07 + 0.2 = 0.47 \\
+    p(Y = y_3) &= 0.1 + 0.05 + 0.03 + 0.05 + 0.04 = 0.27
+    \end{align*}
+    \item Formula for the conditional distribution 
+    $ \displaystyle p(x|Y = y_i) = \frac{p(x, y_i)}{p(Y = y_i)}$ 
+    
+    Thus conditional distributions of $p(x|Y=y_1)$ are:
+    \begin{align*}
+         p(x = x_1|Y = y_1) &= \frac{p(x_1, y_1)}{p(Y = y_1)} = \frac{0.01}{0.26} \approx 0.038 \\
+         p(x = x_2|Y = y_1) &= 0.02 \div 0.26 \approx 0.077 \\
+         p(x = x_3|Y = y_1) &= 0.03 \div 0.26 \approx 0.115 \\
+         p(x = x_4|Y = y_1) &= 0.1 \div 0.26 \approx 0.385 \\
+         p(x = x_5|Y = y_1) &= 0.1 \div 0.26 \approx 0.385
+    \end{align*}
+    
+    Similarly, conditional distributions of $p(x|Y=y_3)$ are:
+        \begin{align*}
+         p(x = x_1|Y = y_3) &= \frac{p(x_1, y_3)}{p(Y = y_3)} = \frac{0.1}{0.27} \approx 0.37 \\
+         p(x = x_2|Y = y_3) &= 0.05 \div 0.27 \approx 0.185 \\
+         p(x = x_3|Y = y_3) &= 0.03 \div 0.27 \approx 0.111 \\
+         p(x = x_4|Y = y_3) &= 0.05 \div 0.27 \approx 0.185 \\
+         p(x = x_5|Y = y_3) &= 0.04 \div 0.27 \approx 0.148
+    \end{align*}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%% Problem 2:
+\section{Problem 2}
+
+Consider two random variables $x$, $y$ with joint distribution $p(x, y)$. Show that:
+\[E_X [X] = E_Y [E_X [x|y]]\]
+
+Here, $E_X [x|y]$ denotes the expected value of $x$ under the conditional distribution $p(x|y)$. 
+
+\textbf{Solution.}
+Suppose that $X$ and $Y$ are two random discrete variables.
+
+Since $E_X [x|y]$ denotes the expected value of $x$ under the conditional distribution $p(x|y)$, we can write the formula $\displaystyle E_X [x|y] = \sum_{x} x \cdot p(x | y)$ 
+
+The value of $\sum_{x} x \cdot p(x | y)$ will change for each value of $y$, therefore distribution of $E_X [x|y]$ values is also the distribution of $y$ values. Then:
+\begin{align*}
+    E_Y [E_X [x | y]] &= E_Y [\sum_{x} x \cdot p(x | y)] \\
+    &= \sum_{y} p(y) \sum_{x} x \cdot p(x | y) \\
+    &= \sum_{y} \sum_{x} p(y) \cdot p(x|y) \cdot x \\
+    &= \sum_{x} x \sum_{y} p(y) \cdot p(x|y) \\
+    &= \sum_{x} x \sum_{y} p(x, y)
+\end{align*}
+
+By definition of marginal distribution, $\sum_{y} p(x, y) = p(x)$. Thus:
+\begin{align*}
+    E_Y [E_X [x | y]] &= \sum_{x} x \cdot p(x) \\
+    &= E_X [X] \qed
+\end{align*}
+
+%%%%%%%%%%%% Problem 3:
+\section{Problem 3}
+
+Một cuộc điều tra cho thấy, ở 1 thành phố 20.7\% dân số dùng sản phẩmX ,50\% dùng loại sản phẩm Y và trong những người dùng Y thì 36.5\% dùng X. Phỏng vấn ngẫu nhiên một người dân trong thành phố đó, tính xác xuất đề người ấy:
+
+\begin{enumerate}[label=(\alph*)]
+    \item Dùng cả X và Y.
+    \item Dùng Y, và biết rằng người đó không dùng X.
+\end{enumerate}
+\textbf{Solution.}
+
+Gọi X là biến cố người được hỏi sử dụng sản phẩm X.
+
+Y là biến cố người đó sử dụng sản phẩm Y.
+
+Như vậy, theo đề bài ta có:
+\[p(X) = 0.207 \]
+\[p(Y) = 0.5 \]
+\[p(X | Y) = 0.365\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item Xác suất người được hỏi sử dụng cả X và Y là:
+    \[p(X, Y) = p(X|Y) \cdot p(Y) = 0.365 \cdot 0.5 = 0.1825\]
+    \item Áp dụng định lý Bayes, xác suất người được hỏi dùng Y, biết rằng người đó không dùng X có thể được viết như sau:
+    \begin{align*}
+    p(Y|\overline{X}) &= \frac{p(\overline{X}|Y) \cdot p(Y)}{p(\overline{X})}\\
+    &= \frac{(1 - p(X|Y)) p(Y)}{1 - p(X)} \\
+    &= \frac{(1 - 0.365)\cdot 0.5}{1 - 0.207} \approx 0.4
+    \end{align*}
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%% Problem 4
+\section{Problem 4} 
+
+Prove the relationship: $V_X = E_X [x^2] - (E_X [X])^2$ , which relates the standard definition of the variance to the raw-score expression for the variance
+
+\textbf{Solution.} 
+\begin{align*}
+    V_X &=  E_X[(X - E_X [X])^2]\\
+    &= E_X [X^2 - 2X E_X [X] + (E_X [X])^2] \\
+    &= E_X [X^2] - 2E_X [X \cdot E_X [X]] + (E_X [X])^2
+\end{align*}
+
+By definition $E_X [X] = \sum x p(x)$ or $E_X [X] = \int x f(x) dx$, for random variable $X$, $E_X[X]$ is just a constant number, then $E[E_X [X]] = E_X [X]$. Therefore:
+\begin{align*}
+    V_X &= E_X[X^2] - 2E_X [X] \cdot E_X [X] + (E_X [X])^2 \\
+    &= E_X[X^2] - 2 (E_X [X])^2 + (E_X [X])^2 \\
+    &= E_X [X^2] - (E_X [X])^2   \qed
+\end{align*}
+
+%%%%%%%%%%%%% Problem 5
+\section{Problem 5}
+Giả sử bạn đứng trước ba ô cửa mà đằng sau nó là một trong hai thứ: con dê hoặc một chiếc xe hơi giá trị. Bạn mong muốn mở trúng ô cửa có chiếc xe để được nhận nó (nếu mở trúng ô cửa có dê thì bạn phải rinh nó về nhà). Monty yêu cầu bạn chọn một trong các ô cửa. Dĩ nhiên bạn chọn một cách “hú họa” tại xác suất lúc này để nhận xe hơi ở mỗi ô cửa đều là $\frac{1}{3}$ . Giả sử bạn chọn ô cửa số 1. Monty sẽ giúp bạn LOẠI TRỪ 1 ĐÁP ÁN SAI bằng cách mở một ô cửa có dê trong hai ô cửa còn lại (dĩ nhiên ông ta đã biết mỗi ô cửa có gì). Sau đó bạn được lựa chọn LẦN HAI: Giữ nguyên ô cửa ban đầu hay đổi sang ô cửa còn lại chưa được lật mở?
+
+\textbf{Solution.} 
+
+\textbf{Cách 1}
+Không mất tính tổng quát, giả sử ban đầu người chơi chọn ô cửa thứ nhất, bảng sau sẽ mô tả kết quả win (người chơi nhận được xe) hay lose (nhận được dê) khi người chơi lựa chọn giữ/đổi lựa chọn của mình trong trường hợp xe nằm ở từng ô:
+
+\begin{center}
+  \begin{tabular}{lllll}
+\multicolumn{1}{c}{\textbf{Lựa chọn}} & \multicolumn{1}{c}{\textit{Xe ở ô cửa 1}} & \multicolumn{1}{c}{\textit{Xe ở ô cửa 2}} & \textit{Xe ở ô cửa 3} & \textit{Xác suất thắng} \\ \hline
+Giữ     & win       & lose      & lose           & $\frac{1}{3}$ \\
+Đổi     & lose      & win       & win            & $\frac{2}{3}$ \\         
+\end{tabular}  
+\end{center}
+
+Như vậy, theo bảng trên ta thấy xác suất người chơi nhận được xe ô tô là cao hơn khi lựa chọn là đổi sang một trong hai ô cửa còn lại. Vì vậy người chơi \textbf{nên đổi sang ô cửa còn lại }.
+\vspace{5mm}
+
+\textbf{Cách 2}
+Không mất tính tổng quát, giả sử ban đầu người chơi chọn ô cửa thứ nhất.
+
+Gọi A là biến cố xe nằm ở ô cửa thứ nhất.
+
+Gọi B là biến cố một trong hai ô cửa còn lại được mở ra (và tất nhiên trong ô cửa đó sẽ có dê).
+
+Vậy xác suất người chơi nhận được xe khi giữ nguyên lựa chọn của mình sau khi một trong hai ô cửa còn lại được mở cũng là xác suất xe nằm ở ô thứ nhất sau khi mở 1 trong 2 ô còn lại và bằng $p(A|B)$
+
+Xác suất người chơi không nhận được xe khi giữ nguyên lựa chọn của mình sau khi mở 1 trong 2 ô cửa còn lại là $p(\overline{A} | B) = 1 - p(A|B)$
+
+Áp dụng định lý Bayes ta có:
+\[p(A|B) = \frac{p(B|A) \cdot p(A)}{p(B)}\]
+
+Biết rằng khi xe nằm ở ô thứ nhất, Monty có thể chọn ngẫu nhiên 1 trong 2 ô còn lại để mở nên xác suất một ô được mở khi xe nằm ở ô thứ nhất $p(B|A)=\frac{1}{2}$
+
+Xác suất xe nằm ở ô cửa thứ nhất $p(A) = \frac{1}{3}$
+
+Xác suất một ô nào đó trong hai ô còn lại được lật mở:
+\begin{align*}
+    p(B)&= p(\text{ô đó được mở khi xe nằm ở ô cửa 1})\\
+    &+ p(\text{ô đó chắc chắn được mở vì xe nằm ở ô còn lại})\\
+    &= p(\text{xe nằm ở ô cửa 1}) \cdot p(\text{một trong hai ô còn lại được mở})\\
+    & + p(\text{xe nằm ở ô cửa còn lại})\cdot p(\text{một trong hai ô cửa còn lại chắn chắn được mở})\\
+    &= \frac{1}{3} \cdot \frac{1}{2} + \frac{1}{3} \cdot 1 = \frac{1}{2}
+\end{align*}
+
+Vì vậy:
+\begin{align*}
+    p(A|B) &= (\frac{1}{2} \cdot \frac{1}{3}) \div \frac{1}{2} = \frac{1}{3}\\
+    p(\overline{A} | B) &= 1 - p(A | B) = 1 - \frac{1}{3} = \frac{2}{3}
+\end{align*}
+
+Ta thấy xác suất người chơi không nhận được xe khi giữ nguyên lựa chọn của mình sau khi mở 1 trong 2 ô cửa còn lại cao hơn, vì vậy người chơi \textbf{nên đổi sang ô còn lại}.
+\end{document}
