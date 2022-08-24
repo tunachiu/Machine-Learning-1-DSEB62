@@ -1,0 +1,367 @@
+%template by Marcel Neunhoeffer & Sebastian Sternberg - Uni of Mannheim
+
+\documentclass[a4paper, 10pt]{article}  %khai bao document class
+
+% set up margin
+\usepackage[top = 2.5cm, bottom = 2.5cm, left = 2.5cm, right = 2.5cm]{geometry} 
+% \usepackage[utf8]{inputenc}  % language encoder
+\usepackage[utf8]{vietnam}  % vietnamese language setting
+\usepackage{multirow} % Multirow is for tables with multiple rows within one cell.
+\usepackage{booktabs} % For even nicer tables.
+\usepackage{graphicx}
+\usepackage{ulem} % for underlined format
+% packages for advanced math eqn and symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem} % for itemize
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdfpagemode=FullScreen,
+    }
+
+% set indent of new paragraph to 0
+\usepackage{setspace}
+\setlength{\parindent}{0.5in}
+\onehalfspacing
+
+% Package to place figures where you want them.
+\usepackage{float}
+
+% The fancyhdr package let's us create nice headers.
+\usepackage{fancyhdr}
+
+%%Make header and footer
+\pagestyle{fancy} % With this command we can customize the header style.
+\fancyhf{} % This makes sure we do not have other information in our header or footer.
+
+% Header
+\lhead{\footnotesize Machine Learning 1: Homework 2}% \lhead puts text in the top left corner. \footnotesize sets our font to a smaller size.
+\rhead{\footnotesize Nguyen Anh Tu @DSEB 62}
+
+% Similar commands work for the footer (\lfoot, \cfoot and \rfoot).
+% We want to put our page number in the center.
+\cfoot{\footnotesize \thepage} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{document}
+
+% Title section of the document
+\thispagestyle{empty} % This command disables the header on the first page. 
+
+\begin{tabular}{p{12.5cm}} % This is a simple tabular environment to align your text nicely 
+{\large \bf National Economics University, Vietnam} \\
+Faculty of Mathematics Economics \\ Data Science in Economics and Business  \\ Machine Learning 1\\
+\hline % \hline produces horizontal lines.
+\\
+\end{tabular} % Our tabular environment ends here.
+
+\vspace*{0.3cm} % Now we want to add some vertical space in between the line and our title.
+
+\begin{center} % Everything within the center environment is centered.
+	{\Large \bf Homework Week 2: Gaussian Distribution} % <---- Don't forget to put in the right number
+	\vspace{2mm}
+	
+	{\bf Student: Nguyễn Anh Tú - ID: 11207333} % <---- Fill in your names here!
+\end{center}  
+
+\vspace{0.4cm}
+
+%%%%%%%%%%%%%%%% Problem 1:
+\section{Problem 1. Proof that:}
+\begin{enumerate}[label=(\alph*)]
+    \item Gaussian distribution is normalized
+    \item Expectation of Gaussian distribution is $\mu$ (mean)
+    \item Variance of Gaussian distribution is $\sigma^2$ (variance)
+    \item Multivariate Gaussian distribution is normalized
+\end{enumerate}
+
+\textbf{Solution.}
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Normalization of Univariate Gaussian distribution is given by:
+    \[\int_{-\infty}^{\infty} p(x | \mu, \sigma^2) dx = 1\]
+    \[\Longleftrightarrow \int_{-\infty}^{\infty} \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left( \frac{-(x - \mu)^2}{2 \sigma^2} \right) dx = 1\]
+    We will first prove the base case when the mean equals to zero ($\mu = 0$), which means that:
+    \[\int_{-\infty}^{\infty} \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left( \frac{-1}{2 \sigma^2} x^2 \right) dx = 1\]
+     \[\Longleftrightarrow \int_{-\infty}^{\infty} \exp \left( \frac{-1}{2 \sigma^2} x^2 \right) dx = \sqrt{2 \pi \sigma^2}\]
+     
+     Let:
+     \[I = \int_{-\infty}^{\infty} \exp \left( \frac{-1}{2 \sigma^2} x^2 \right) dx\]
+     Then we will take the square of both side:
+     \[I^2 = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} 
+     \exp \left( \frac{-1}{2 \sigma^2} x^2 \right) \exp \left( \frac{-1}{2 \sigma^2} y^2 \right) dx dy\]
+     \[\Longleftrightarrow I^2 = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}
+     \exp \left( -\frac{x^2 + y^2}{2 \sigma^2}\right) dx dy\]
+     
+    To conduct the integration, we will make the transformation from Cartesian coordinates $(x, y)$ to \textbf{polar coordinates} $(r, \theta)$ by assuming:
+    \begin{align*}
+        x = r \cos \theta \\
+        y = r \sin \theta
+    \end{align*}
+    where $r$ and $\theta$ are arbitrary number and angle. By the trigonometric identity we also have:
+    \begin{align*}
+        \cos^2 \theta + \sin^2 \theta = 1 \\
+        x^2 + y^2 = r^2
+    \end{align*}
+    While transforming integrals between two coordinate systems, we also note that the Jacobian the change of variables is given by:
+    \begin{align*}
+        dx dy &= |J| dr d\theta\\
+        &= 
+        \begin{vmatrix}
+        \displaystyle{\frac{\partial (x)}{\partial (r)}} & \displaystyle{\frac{\partial (x)}{\partial (\theta)}}\\ 
+        \displaystyle{\frac{\partial (y)}{\partial (r)}} & 
+        \displaystyle{\frac{\partial (y)}{\partial (\theta)}}
+        \end{vmatrix} \\
+        &=
+        \begin{vmatrix}
+        \cos \theta & -r \sin \theta \\
+        \sin \theta & r \cos \theta
+        \end{vmatrix} \\
+        &= r \cos^2 \theta + r \sin^2 \theta \\
+        &= r \\
+        & \Longrightarrow dxdy = r dr d\theta
+    \end{align*}
+    Substituting the above results to the expression of $I$ then:
+    \begin{align*}
+        I^2 &= \int_0^{2 \pi} \int_0^\infty \exp \left( -\frac{r^2}{2 \sigma^2} \right) r dr d\theta \\
+        &= 2 \pi \int_0^\infty \exp \left( -\frac{r^2}{2 \sigma^2} \right) r dr \\
+        &= 2 \pi \pi \int_0^\infty \exp \exp \left( -\frac{r^2}{2 \sigma^2} \right) \frac{d(r^2)}{2} \\
+        &= \pi \left[ \exp \left(- \frac{r^2}{2 \sigma^2} \right) (-2 \sigma^2) \right]_0^\infty \\
+        &= 2 \pi \sigma^2
+    \end{align*}
+    Now we have $I = \sqrt{2 \pi \sigma^2}$, to prove the case when mean is non zero, we suppose $t = x - \mu$ so that:
+    \begin{align*}
+        \int_{-\infty}^\infty p(x|\mu, \sigma^2) dx &= \frac{1}{\sqrt{2 \pi \sigma^2}} \int_{-\infty}^\infty \exp \left( -\frac{t^2}{2\sigma^2} \right) dt \\
+        &= \frac{I}{\sqrt{2 \pi \sigma^2}} \\
+        &= \frac{\sqrt{2 \pi \sigma^2}}{\sqrt{2 \pi \sigma^2}} = 1  \qed
+    \end{align*}
+    
+    \item The formula of expected value of continuous random variable is given by:
+    \[ E(X) = \int_{-\infty}^\infty x f_X (x) dx\]
+    Then the expectation of Univariate Gaussian Distribution is:
+    \begin{align*}
+        E(X) &= \int_{-\infty}^\infty x \cdot \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left(- \frac{(x- \mu)^2}{2 \sigma^2} \right) dx \\
+        &= \frac{1}{\sqrt{2 \pi \sigma^2}} \int_{-\infty}^\infty x \exp \left(- \frac{(x- \mu)^2}{2 \sigma^2} \right) dx
+    \end{align*}
+    To simplify the equation, let \(\displaystyle{t = \frac{x - \mu}{\sqrt{2 \sigma^2}}}\). Then \(\displaystyle{dt = \frac{dx}{\sqrt{2 \sigma^2}}}\) and \(x = t\sqrt{2 \sigma^2} + \mu\). 
+    
+    Substituting $t$ in $E(X)$:
+    \begin{align*}
+        E(X) &= \frac{1}{\sqrt{2 \pi \sigma^2}} \int_{-\infty}^\infty (t\sqrt{2 \sigma^2} + \mu) \exp (-t^2) \sqrt{2 \sigma^2} dt \\
+        &= \frac{\sqrt{2 \sigma^2}}{\sqrt{2 \pi \sigma^2}} \int_{-\infty}^\infty (t\sqrt{2 \sigma^2} + \mu) \exp (-t^2) dt \\
+        &= \frac{1}{\sqrt{\pi}} \left( \sqrt{2 \sigma^2} \int_{-\infty}^\infty t \exp(-t^2) dt + \mu \int_{-\infty}^\infty \exp(-t^2) dt \right)
+    \end{align*}
+    Let \(\displaystyle{A = \sqrt{2 \sigma^2} \int_{-\infty}^\infty t \exp(-t^2) dt \text{ and } B = \mu \int_{-\infty}^\infty \exp(-t^2) dt}\). Then:
+    \begin{align*}
+    A &= \sqrt{2 \sigma^2} \int_{-\infty}^\infty \exp(-t^2) t d(t) \\
+    &= \sqrt{2 \sigma^2} \int_{-\infty}^\infty -\frac{1}{2} \exp(-t^2) d(-t^2) \\
+    &= \sqrt{2 \sigma^2} \left[ -\frac{1}{2} \exp(-t^2)\right]_{-\infty}^\infty \\
+    &= 0 \text{     (1)}
+    \end{align*}
+    \begin{align*}
+        B^2 &=  \mu^2 \int_{-\infty}^\infty \exp(-t^2) dt \int_{-\infty}^\infty \exp(-u^2) du \\
+        &= \mu^2 \int_{-\infty}^\infty \int_{-\infty}^\infty \exp (-t^2 - u^2) du dt
+    \end{align*}
+    At this step, we will calculate $B$ using polar transformation just like how the expression of $I$ was calculated in part \textbf{(a)} of this problem. The final result is $B = \mu \sqrt{\pi}$  (2)
+    
+    From (1) and (2) we have:
+    \[E(X) = \frac{\mu \sqrt{\pi}}{\sqrt{pi}} = \mu  \qed\]
+    
+    \item By definition, the formula of the variance in Gaussian distribution is given by:
+    \begin{align*}
+        V(X) &= E[(X - E(X))^2]\\
+        &= \int_{-\infty}^\infty (x - \mu)^2 f_X(x) dx \\
+        &= \int_{-\infty}^\infty (x - \mu)^2 \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left( -\frac{(x - \mu)^2}{2 \sigma^2} \right) dx \\
+        &= \int_{-\infty}^\infty x^2 \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left( -\frac{x^2}{2 \sigma^2} \right) dx \\
+        &= \int_{-\infty}^\infty (\sqrt{2 \sigma^2}x)^2 \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left( -\frac{(\sqrt{2 \sigma^2}x)^2}{2 \sigma^2} \right) d(\sqrt{2 \sigma^2}x) \\
+        &= \sigma^2 \frac{2}{\sqrt{\pi}} \int_{-\infty}^\infty x^2 e^{-x^2} dx \\
+        &= \sigma^2 \frac{4}{\sqrt{\pi}} \int_0^\infty x^2 e^{-x^2} dx
+    \end{align*}
+    Let $t = x^2 \Rightarrow x = \sqrt{t}$ and $dt = 2xdx = 2\sqrt{t}dx = (2 \sqrt{t})^{-1}dt$. Substituting to $V(X)$:
+    \[V(X) = \sigma^2 \frac{4}{\sqrt{\pi}} \int_0^\infty t e^{-t} (2 \sqrt{t})^{-1}dt 
+    = \sigma^2 \frac{2}{\sqrt{\pi}} \int_0^\infty t^{1/2} e^{-t} dt\]
+    Note that \(\displaystyle{\int_0^\infty t^{1/2} e^{-t} dt = \int_0^\infty t^{\frac{3}{2}-1} e^{-t} dt = \Gamma(\frac{3}{2}) = \frac{\sqrt{\pi}}{2}}\) (\href{https://en.wikipedia.org/wiki/Gamma_function}{Gamma function})
+    
+    The result of \(\Gamma(\frac{3}{2})\) can be calculated manually using \href{https://en.wikipedia.org/wiki/Multiplication_theorem#Gamma_function\%E2\%80\%93Legendre_formula}{Legendre duplication formula}, a property of Gamma function that allows the calculation of half-integer entry. Substituting to $V(X)$:
+    \[V(X) = \sigma^2 \frac{2}{\sqrt{\pi}} \frac{\sqrt{\pi}}{2} = \sigma^2 \qed\]
+    
+    \item Multivariate Gaussian distribution is normalized
+
+We have
+$$
+\begin{aligned}
+\Delta^{2} &=(x-\mu)^{T} \Sigma^{-1}(x-\mu) \\
+&=\sum_{i=1}^{D} \frac{1}{\lambda_{i}}(x-\mu)^{T}(x-\mu) \\
+&=\sum_{i=1}^{D} \frac{y_{i}^{2}}{\lambda_{i}}
+\end{aligned}
+$$
+with $y_{i}=u_{i}^{T}(x-\mu)$ We also have $|\Sigma|^{\frac{1}{2}}=\prod_{i=1}^{D} \lambda_{i}^{\frac{1}{2}}$.
+For a D-dimensional vector $\mathrm{x}$, the multivariate Gaussian distribution takes the form
+\[p(x \mid \mu, \Sigma)=\frac{1}{(2 \pi)^{\frac{D}{2}}|\Sigma|^{\frac{1}{2}}} \exp \left(-\frac{1}{2}(x-\mu)^{T} \Sigma^{-1}(x-\mu)\right)\]
+We replace $y_{i}=u_{i}^{T}(x-\mu)$ into the equation, we have
+$$
+\begin{aligned}
+p(y) &=\frac{1}{(2 \pi)^{\frac{D}{2}}\left(\prod_{i=1}^{D} \lambda_{i}\right)^{\frac{1}{2}}} \exp \left(-\frac{1}{2} \sum_{i=1}^{D} \frac{y_{i}^{2}}{\lambda_{i}}\right) \\
+&=\frac{1}{(2 \pi)^{\frac{D}{2}}\left(\prod_{i=1}^{D} \lambda_{i}\right)^{\frac{1}{2}}} \prod_{i=1}^{D} \exp \left(-\frac{1}{2} \frac{y_{i}^{2}}{\lambda_{i}}\right) \\
+&=\prod_{j=1}^{D} \frac{1}{\left(2 \pi \lambda_{i}\right)^{\frac{1}{2}}} \exp \left(-\frac{y_{j}^{2}}{2 \lambda_{j}}\right) \\
+\Longrightarrow \int_{-\infty}^{\infty} p(y) d y &=\prod_{j=1}^{D} \int_{-\infty}^{\infty} \frac{1}{\left(2 \pi \lambda_{i}\right)^{\frac{1}{2}}} \exp \left(-\frac{y_{j}^{2}}{2 \lambda_{j}}\right) d y_{j} \\
+&=1
+\end{aligned}
+$$
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%% Problem 2:
+\section{Problem 2. Calculate:}
+\begin{enumerate}[label=(\alph*)]
+    \item The marginal of Gaussian distribution
+    \item The conditional of Gaussian distribution
+\end{enumerate}
+\textbf{Solution.}
+Before jumping in the solution for each part, there will be some useful results that would help later. Given $x \in \mathbb{R}^n$:
+\begin{align}
+    & \int p(x; \mu; \Sigma) dx = \int_{-\infty}^\infty ... \int_{-\infty}^\infty p(x; \mu; \Sigma)dx_1 ... dx_n = 1 \\
+    & \int x_i p(x; \mu; \sigma^2)dx = \mu_i \\
+    & \int (x_i - \mu_i)(x_j - \mu_j) p(x; \mu, \sigma^2) dx = \Sigma_{ij} \\
+    & \left[ \begin{array}{cc}
+        A & B \\
+        C & D
+    \end{array} \right]^{-1}
+    = \left[ \begin{array}{cc}
+        M^{-1} & -M^{-1}BD^{-1} \\
+        -D^{-1} C M^{-1} & D^{-1} + D^{-1} C M^{-1} B D^{-1} \end{array}\right] \text{ where } M = A - B D^{-1} C \\
+        & \text{ (Schur complement)} \nonumber
+\end{align}
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Suppose that
+    \[\left[ \begin{array}{c} x_A \\ x_B \end{array} \right] 
+    \sim \mathcal{N} \left( \left[ \begin{array}{c} \mu_A \\ \mu_B \end{array} \right],
+    \left[ \begin{array}{cc} \Sigma_{AA} & \Sigma_{AB}\\ \Sigma_{BA} & \Sigma_{BB}\end{array} \right]  \right)\]
+    where $x_A \in \mathbb{R}^m$, $x_B \in \mathbb{R}^n$. The marginal PDF for $x_A$ (calculation of marginal distribution for $x_B$ is similar) is:
+    \begin{align*}
+        p(x_A) &= \int p(x_A, x_B; \mu, \Sigma)d x_B \\
+        &= \frac{1}{(2 \pi)^{\frac{m + n}{2}} |\Sigma|^{1/2}} 
+        \int \exp \left( -\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu)\right) d x_B \\
+        &= \frac{1}{(2 \pi)^{\frac{m + n}{2}} \left| \begin{array}{cc}
+            \Sigma_{AA} & \Sigma_{AB} \\
+            \Sigma_{BA} & \Sigma_{BB}
+        \end{array}\right|^{1/2}} 
+        \int \exp \left( -\frac{1}{2} \left[ \begin{array}{c} x_A - \mu_A \\ x_B - \mu_B \end{array} \right]^T \left[ \begin{array}{cc}
+            \Sigma_{AA} & \Sigma_{AB} \\
+            \Sigma_{BA} & \Sigma_{BB}
+        \end{array} \right]^{-1} \left[ \begin{array}{c} x_A - \mu_A \\ x_B - \mu_B \end{array} \right]\right)
+    \end{align*}
+    Denote:
+    \[V = \left[ \begin{array}{cc}
+        V_{AA} & V_{AB} \\
+        V_{BA} & V_{BB} \end{array} \right] = \Sigma^{-1}\]
+    Let $\displaystyle{Z = \frac{1}{(2 \pi)^{\frac{m + n}{2}} |\Sigma|^{1/2}}}$ be a constant that its value does not depend on $x_A$. Substituting to the marginal distribution expression:
+    \begin{align*}
+        p(x_A) &= \frac{1}{Z} \int \exp \left( -\frac{1}{2}(x_A - \mu_A)^T V_{AA} (x_A - \mu_A) -\frac{1}{2}(x_A - \mu_A)^T V_{AB} (x_B - \mu_B) \right) d x_B \\
+        & \cdot \int \exp \left(-\frac{1}{2}(x_B - \mu_B)^T V_{BA} (x_A - \mu_A) -\frac{1}{2}(x_B - \mu_B)^T V_{BB} (x_B - \mu_B) \right) d x_B 
+    \end{align*}
+    Here we will apply a mathematical trick known as "completion of squares" to transform $p(X_A)$ to an expression including quadratic form. Consider the quadratic function $z^T A z + b^T z + c$ where $A$ is a symmetric, non singular matrix. Then:
+    \[\frac{1}{2} z^T A z + b^T z + c = \frac{1}{2} (z + A^{-1}b)^T A (z + A^{-1}b) + c - \frac{1}{2} b^T A^{-1} b\]
+    In our case:
+    \begin{align*}
+        z &= x_B - \mu_B \\
+        A &= V_{BB} \\
+        b &= V_{BA}(x_A - \mu_A) \\
+        c &= \frac{1}{2}(x_A - \mu_A)^T V_{AA} (x_A - \mu_A)
+    \end{align*}
+    Then:
+    \begin{align*}
+        p(x_A) &= \frac{1}{Z} \exp \left( -\frac{1}{2}(x_A - \mu_A)^T V_{AA} (x_A - \mu_A) + \frac{1}{2}(x_A - \mu_A)^T V_{AB} V_{BB}^{-1} V_{BA} (x_A - \mu_A)\right) \\
+        & \cdot \int \exp \left[ -\frac{1}{2} \left( x_B - \mu_B + V_{BB}^{-1} V_{BA} (x_A - \mu_A) \right)^T V_{BB} \left( x_B - \mu_B + V_{BB}^{-1} V_{BA} (x_A - \mu_A) \right) \right] d x_B \\
+        &= \frac{1}{Z} \exp \left( -\frac{1}{2}(x_A - \mu_A)^T (V_{AA} - V_{AB} V_{BB}^{-1} V_{BA}) (x_A - \mu_A)\right) \\
+        & \cdot \int \exp \left[ -\frac{1}{2} \left( x_B - \mu_B\right)^T V_{BB} \left( x_B - \mu_B \right) \right] d x_B
+    \end{align*}
+    Recall the result \textbf{(1)} in the useful result section I have listed at the beginning of this problem:
+    \[p(x) = \frac{1}{(2 \pi)^{n/2} |\Sigma|^{1/2}} 
+        \int \exp \left( -\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu)\right) d x = 1 \]
+    Then:
+    \[\frac{1}{(2 \pi)^{n/2} |V_{BB}|^{1/2}} \int \exp \left[ -\frac{1}{2} \left( x_B - \mu_B\right)^T V_{BB} \left( x_B - \mu_B \right) \right] d x_B = 1\]
+    
+    Now we have eliminated the integral part in the expression of $p(x_A)$, the remainder will be:
+    \[p(x_A) = \frac{1}{Z} (2 \pi)^{n/2} |V_{BB}|^{1/2} \exp \left( -\frac{1}{2}(x_A - \mu_A)^T (V_{AA} - V_{AB} V_{BB}^{-1} V_{BA}) (x_A - \mu_A)\right)\]
+    
+    Applying Schur complement knowing that:
+    \begin{align*}
+        \left[ \begin{array}{cc}
+            \Sigma_{AA} & \Sigma_{AB} \\
+            \Sigma_{BA} & \Sigma_{BB}
+        \end{array} \right]^{-1} 
+        & = \left[ \begin{array}{cc}
+        V_{AA} & V_{AB} \\
+        V_{BA} & V_{BB} \end{array} \right] \\
+        &= \left[ \begin{array}{cc}
+            (V_{AA} - V_{AB} V_{BB}^{-1} V_{BA})^{-1} &  V_{AB} V_{BB}^{-1} V_{BA})^{-1} V_{AB} V_{BB}^{-1}\\
+            - V_{BB} V_{BA}(V_{AA} - V_{AB} V_{BB}^{-1} V_{BA})^{-1} & (V_{BB} - V{BA} V_{AA}^{-1}V_{AB})^{-1}
+        \end{array} \right]
+    \end{align*}
+    Then we can see that \((V_{AA} - V_{AB} V{BB}^{-1} V_{BA})^{-1} = \Sigma_{AA}\). The formula for marginal distribution $p(x_A)$ will be:
+    
+    \[\mathbf{p(x_A) = \frac{1}{Z} (2 \pi)^{n/2} |V_{BB}|^{1/2} \exp \left( -\frac{1}{2}(x_A - \mu_A)^T \Sigma_{AA} (x_A - \mu_A)\right)} \]
+    
+    
+    %% Part b:
+    \item Suppose that
+    \[\left[ \begin{array}{c} x_A \\ x_B \end{array} \right] 
+    \sim \mathcal{N} \left( \left[ \begin{array}{c} \mu_A \\ \mu_B \end{array} \right],
+    \left[ \begin{array}{cc} \Sigma_{AA} & \Sigma_{AB}\\ \Sigma_{BA} & \Sigma_{BB}\end{array} \right]  \right)\]
+    where $x_A \in \mathbb{R}^m$, $x_B \in \mathbb{R}^n$. The conditional PDF  $p(x_A | x_B)$ is:
+    \begin{align*}
+        p(x_A | x_B) &= \frac{p(x_A, x_B; \mu, \sigma)}{p(x_A)} \\
+        &= \frac{p(x_A, x_B; \mu, \sigma)}{\int p(x_A, x_B; \mu, \sigma) d x_A}
+    \end{align*}
+    Note that the integral in the denominator does not depend on $x_A$ because it is the marginal distribution over $x_B$. Then, to simplify, we will denote $M$ including all the factors that does not depend on $x_A$ and the denominator as well. The expression for $p(x_A | x_B)$ will be:
+    \begin{align*}
+        p(x_A | x_B) &= \frac{1}{M} \exp(-\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu))\\
+        &= \frac{1}{M} \exp \left( -\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu)\right) d x_B \\
+        &= \exp \left( -\frac{1}{2} \left[ \begin{array}{c} x_A - \mu_A \\ x_B - \mu_B \end{array} \right]^T \left[ \begin{array}{cc}
+            \Sigma_{AA} & \Sigma_{AB} \\
+            \Sigma_{BA} & \Sigma_{BB}
+        \end{array} \right]^{-1} \left[ \begin{array}{c} x_A - \mu_A \\ x_B - \mu_B \end{array} \right]\right) \\
+        &= \frac{1}{M} \exp \left( -\frac{1}{2}(x_A - \mu_A)^T V_{AA} (x_A - \mu_A) -\frac{1}{2}(x_A - \mu_A)^T V_{AB} (x_B - \mu_B) \right) \\
+        & \cdot \exp \left(-\frac{1}{2}(x_B - \mu_B)^T V_{BA} (x_A - \mu_A) -\frac{1}{2}(x_B - \mu_B)^T V_{BB} (x_B - \mu_B) \right)
+    \end{align*}
+    Applying complement square again, in this case:
+    \begin{align*}
+        z &= x_A - \mu_A \\
+        A &= V_{AA} \\
+        b &= V_{AB} (x_B - \mu_B) \\
+        c &= \frac{1}{2} (x_B - \mu_B)^T V_{BB} (x_B - \mu_B)
+    \end{align*}
+    
+    Then the new expression for $p(x_A | x_B)$ will be:
+    \begin{align*}
+        p(x_A | x_B) &= \frac{1}{M} \exp \left[ -\frac{1}{2} (x_A - \mu_A + V_{AA}^{-1} V_{AB} (x_A - \mu_A))^T V_{AA}  (x_A - \mu_A + V_{AA}^{-1} V_{AB} (x_B - \mu_B))\right] \\
+        & \cdot \exp \left[ -\frac{1}{2}(x_B - \mu_B)^T V_{BB} (x_B - \mu_B) + \frac{1}{2}(x_B - \mu_B)^T V_{BA} V_{AA}^{-1} V_{AB} (x_B - \mu_B) \right] \text{ (*)}
+    \end{align*}
+    The second exp factor in (*) does not depend on $x_A$ so we can include it and $M$ in a normalization constant $M'$. Then:
+    \[p(x_A | x_B) = \frac{1}{M'} \exp \left[ -\frac{1}{2} (x_A - \mu_A + V_{AA}^{-1} V_{AB} (x_A - \mu_A))^T V_{AA}  (x_A - \mu_A + V_{AA}^{-1} V_{AB} (x_B - \mu_B))\right]\]
+    
+    Applying Schur complement knowing that:
+    \begin{align*}
+        \left[ \begin{array}{cc}
+            \Sigma_{AA} & \Sigma_{AB} \\
+            \Sigma_{BA} & \Sigma_{BB}
+        \end{array} \right]^{-1} 
+        & = \left[ \begin{array}{cc}
+        V_{AA} & V_{AB} \\
+        V_{BA} & V_{BB} \end{array} \right] \\
+        &= \left[ \begin{array}{cc}
+            (V_{AA} - V_{AB} V_{BB}^{-1} V_{BA})^{-1} &  V_{AB} V_{BB}^{-1} V_{BA})^{-1} V_{AB} V_{BB}^{-1}\\
+            - V_{BB} V_{BA}(V_{AA} - V_{AB} V_{BB}^{-1} V_{BA})^{-1} & (V_{BB} - V{BA} V_{AA}^{-1}V_{AB})^{-1}
+        \end{array} \right]
+    \end{align*}
+    Then we have:
+    \[\mu_{A|B} = \mu_A - V_{AA}^{-1} V_{AB} (x_B - \mu_B) = \mu_A + \Sigma_{AB} \Sigma_{BB}(x_B - \mu_B) \]
+    
+    Conversely, we can also derive \(V_{AA}^{-1} = \Sigma_{AA} - \Sigma_{AB} \Sigma_{BB}^{-1} \Sigma_{BA})^{-1}\) then \[\Sigma_{A|B} = V_{AA}^{-1} = \Sigma_{AA} - \Sigma_{AB} \Sigma_{BB}^{-1} \Sigma_{BA})^{-1}\]
+    \[\Rightarrow p(x_A | x_B) \sim \mathbb{N} (\mu_{A|B}; \Sigma_{A|B})\] with mean and variance are calculated above.
+\end{enumerate}
+\end{document}
