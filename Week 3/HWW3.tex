@@ -1,0 +1,258 @@
+%template by Marcel Neunhoeffer & Sebastian Sternberg - Uni of Mannheim
+
+\documentclass[a4paper, 12pt]{article}  %khai bao document class
+
+% set up margin
+\usepackage[top = 2.5cm, bottom = 2.5cm, left = 2.5cm, right = 2.5cm]{geometry} 
+% \usepackage[utf8]{inputenc}  % language encoder
+\usepackage[utf8]{vietnam}  % vietnamese language setting
+\usepackage{multirow} % Multirow is for tables with multiple rows within one cell.
+\usepackage{booktabs} % For even nicer tables.
+\usepackage{graphicx}
+\usepackage{ulem} % for underlined format
+% packages for advanced math eqn and symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem} % for itemize
+\usepackage{hyperref}
+
+% set indent of new paragraph to 0
+\usepackage{setspace}
+\setlength{\parindent}{0.5in}
+\onehalfspacing
+
+% Package to place figures where you want them.
+\usepackage{float}
+
+% The fancyhdr package let's us create nice headers.
+\usepackage{fancyhdr}
+
+%%Make header and footer
+\pagestyle{fancy} % With this command we can customize the header style.
+\fancyhf{} % This makes sure we do not have other information in our header or footer.
+
+% Header
+\lhead{\footnotesize Machine Learning 1: Homework 3}% \lhead puts text in the top left corner. \footnotesize sets our font to a smaller size.
+\rhead{\footnotesize Nguyen Anh Tu @DSEB 62}
+
+% Similar commands work for the footer (\lfoot, \cfoot and \rfoot).
+% We want to put our page number in the center.
+\cfoot{\footnotesize \thepage} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{document}
+
+% Title section of the document
+\thispagestyle{empty} % This command disables the header on the first page. 
+
+\begin{tabular}{p{12.5cm}} % This is a simple tabular environment to align your text nicely 
+{\large \bf National Economics University, Vietnam} \\
+Faculty of Mathematics Economics \\ Data Science in Economics and Business  \\ Machine Learning 1\\
+\hline % \hline produces horizontal lines.
+\\
+\end{tabular} % Our tabular environment ends here.
+
+\vspace*{0.3cm} % Now we want to add some vertical space in between the line and our title.
+
+\begin{center} % Everything within the center environment is centered.
+	{\Large \bf Homework Week 3} % <---- Don't forget to put in the right number
+	\vspace{2mm}
+	
+	{\bf Student: Nguyễn Anh Tú - ID: 11207333} % <---- Fill in your names here!
+\end{center}  
+
+%%%%%%%%%%%%%%%% Problem 1:
+\section{Problem 1}
+
+Biến đổi để chứng minh kết quả của Normal Equation:
+\[\omega = (X^T X)^{-1} X^T t\]
+
+%%%% Solution
+\textbf{Solution.} Giả sử trong một bài toán hồi quy tuyến tính có tập dữ liệu gồm n quan sát. Các biến độc lập được ký hiệu bởi vector \(x = (x_1, x_2, ..., x_n)^T\) và các biến phụ thuộc tương ứng của chúng được ký hiệu bởi vector \(t = (t_1, t_2, ..., t_n)^T\). Giả sử các điểm dữ liệu đều độc lập và có cùng phân phối (independent and identically distributed), ta có thể viết được mối quan hệ của hai biến $t$ và $x$ như sau: \[t = y(x, \omega) + \epsilon\]
+Với $\epsilon$ là một nhiễu ngẫu nhiên, biểu thị cho sai số của mô hình so với giá trị thực. Giả sử \(\epsilon \sim \mathcal{N}(0, \beta)\), vì \(t = y(x, \omega) + \epsilon\) nên \(t \sim \mathcal{N}(y(x, \omega), \beta) \Rightarrow p(t) = \mathcal{N}(t | y(x, \omega), \beta)\).
+
+Từ những giả thiết trên ta có thể xây dựng được hàm likelihood, hay xác suất của bộ dữ liệu, như sau:
+\[p(t | x, \omega, \beta) = \prod^n \mathcal{N}(t | y(x, \omega), \beta)\]
+
+Để thuận tiện cho việc tính toán maximum likelihood, thay vào đó ta sẽ tối ưu hàm log-likelihood:
+
+\begin{align*}
+    \log p(t | x, \omega, \beta) &= \sum^n \log (\mathcal{N}(t | y(x, \omega), \beta))\\
+    &= \sum^n \log \int^\infty_{-\infty} \frac{1}{\beta^{1/2} \sqrt{2 \pi}} \exp \left( -\frac{(y(x, \omega) - t)^2}{2 \beta} \right)\\
+    &= n \log \frac{1}{\beta^{1/2} \sqrt{2 \pi}} - \frac{1}{2 \beta} \sum^n (y(x, \omega) - t)^2
+\end{align*}
+Lưu ý rằng $\beta$ trong bài toán này được xét như một hằng số nên để tìm cực đại của hàm log-likelihood ta cần tìm cực tiểu của \(\sum (y(x, \omega) - t)^2\). 
+
+Gọi \(P = \sum^n (y(x, \omega) - t)^2\) trong đó \(y(x, \omega) = \omega_1 x + \omega_0\). Giả sử các vector $x, t, \omega$ được ký hiệu như sau:
+$$ x =
+\begin{bmatrix}
+1 & x_1\\
+1 & x_2\\
+\vdots & \vdots\\
+1 & x_n
+\end{bmatrix}
+;
+\hspace{1cm}
+t =
+\begin{bmatrix}
+t_1\\
+t_2\\
+\vdots\\
+t_n
+\end{bmatrix}
+;
+\hspace{1cm}
+\omega =
+\begin{bmatrix}
+    w_0\\
+    w_1
+\end{bmatrix}
+$$
+
+Vậy:
+$$
+y =
+\begin{bmatrix}
+    y_1\\
+    y_2\\
+    \vdots\\
+    y_n
+\end{bmatrix}
+=
+\begin{bmatrix}
+    w_1x_1 + w_0\\
+    w_2x_2 + w_0\\
+    \vdots\\
+    w_nx_n + w_0
+\end{bmatrix}
+= x \cdot \omega
+$$
+\\
+$$
+t -y = 
+\begin{bmatrix}
+    t_1 - y_1\\
+    t_2 - y_2\\
+    \vdots\\
+    t_n - y_n
+\end{bmatrix}
+$$
+\begin{align*}
+    \Longrightarrow {\lVert t - y \rVert}_2^2 &= (t_1 - y_1)^2 + \cdots + (t_n - y_n)^2 \\
+    &= \sum^n (t_i - y_i)^2 = P
+\end{align*}
+\[\Longrightarrow P = {\lVert t - y \rVert}_2^2 = {\lVert t - x\omega \rVert}_2^2 = (x\omega - t)^T(x\omega - t)\]
+Lấy đạo hàm riêng theo $\omega$ của P ta được:
+\begin{align*}
+\frac{\partial(P)}{\partial (\omega)} &= 2x^T(t-x\omega) = 0\\
+    &\Longleftrightarrow x^t = x^Tx \omega\\ 
+    &\Longleftrightarrow \omega = (x^Tx)^{-1}x^Tt  
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%% Problem 2:
+\section{Problem 2}
+
+Viết code numpy, tìm model linear regression cho bài toán dữ đoán giá nhà với dataset \href{https://github.com/nttuan8/DL_Tutorial/blob/master/L1/data_linear.csv}{data\_linear.csv}. Sau đó thực hiện các yêu cầu sau:
+\begin{enumerate}[label=\alph*.]
+    \item Vẽ model dự đoán (đường thẳng) và dữ liệu (point - scatter).
+    \item Dự đoán giá các căn nhà có diện tích 50, 100, 150.
+\end{enumerate}
+
+\textbf{Solution.} 
+\begin{enumerate}[label=\alph*.]
+    \item Sử dụng kết quả của Problem 1 để viết code tìm hệ số $\omega$ cho mô hình hồi quy tuyến tính sử dụng dataset trên, tìm được kết quả $\omega$ như sau:
+    \begin{align*}
+        \omega_0 &= -7.0642686452452494\\
+        \omega_1 &= 15.211090799670416
+    \end{align*}
+    Mô hình dự đoán và dữ liệu được vẽ trên đồ thị scatter như sau:\\
+    \includegraphics[scale=0.8]{Problem2_W3.png}
+    \item Kết quả dự đoán giá các căn nhà có diện tích 50, 100, 150 như sau:
+\begin{center}
+ \begin{tabular}{ll}
+\multicolumn{1}{c}{Diện tích} & \multicolumn{1}{c}{Giá tiền} \\ \hline
+50     &  753.49027\\
+100     &  1514.04481\\ 
+150    &   2274.59935\\
+\end{tabular}  
+\end{center}
+\end{enumerate}
+
+
+%%%%%%%%%%%% Problem 3:
+\section{Problem 3}
+Viết code numpy, tìm model linear regression cho bai toán dữ đoán giá nhà, dataset \href{https://www.kaggle.com/prasadperera/the-boston-housing-dataset}{housing.csv}
+
+Trong source code đã sử dụng phương pháp Newton-Raphson để tìm cực tiểu cho hàm mất mát (cost function), qua đó tìm được các tham số cho mô hình hồi quy tuyến tính cho dataset trên. Lưu ý rằng trong mô hình \(y = \theta_0 + \theta_1 x\) có cost function được biểu diễn như sau:
+\[J(\theta) = \frac{1}{n} \sum^n_i (x_i \theta - y_i)^2\]
+
+Gradient vector của $J(\theta)$ là:
+\begin{align*}
+    \nabla J(\theta) = \frac{\partial}{\partial \theta} J(\theta) &= \frac{\partial}{\partial \theta} \frac{1}{n} \sum^n_i (x_i \theta - y_i)^2\\
+    &= \frac{2}{m} (x_i \theta - y_i) \frac{\partial}{\partial \theta} (x_i \theta - y_i) \\
+    &= \frac{2}{m} (x_i \theta - y_i) x_i
+\end{align*}
+
+Ma trận Hessian của $J(\theta)$ là:
+\begin{align*}
+    \mathbf{H}(J)(\theta) = \frac{\partial^2 J}{\partial \theta_i \partial \theta_j} &= \frac{\partial}{\partial \theta} \frac{2}{m} (x_i \theta - y_i) x_i  = \sum_i^n (x_i)^2 = X^TX
+\end{align*}
+
+Cuối cùng, learning rule của phương pháp Newton-Raphson được quy định như sau (lặp lại cho đến khi learning step đủ nhỏ) :
+\[\theta_{i+1} = \theta_{i} \pm \alpha * \mathbf{H}(J)^{-1} \cdot \nabla J\]
+Trong đó $\alpha$ là một tham số biểu thị learning rate tùy chọn.
+
+Sau khi áp dụng phương pháp trên, bộ tham số tìm được cho mô hình hồi quy tuyến tính của dataset này là:
+
+\begin{center}
+ \begin{tabular}{ll}
+\multicolumn{1}{c}{Biến} & \multicolumn{1}{c}{Hệ số} \\ \hline
+$\theta_0$     &  3.646e+01\\
+CRIM     &  -1.08e-01\\ 
+ZN    &  4.642e-02\\
+INDUS    &   2.056e-02\\
+CHAS     &    2.687e+00\\
+NOX     &    -1.777e+01\\
+RM    &    3.81e+00\\
+AGE    &    6.922e-04\\
+DIS    &    -1.476e+00\\
+RAD    &    3.060e-01\\
+TAX  &    -1.233e-02 \\
+PTRATIO   &   -9.527e-01\\
+B    &  9.312e-03\\
+LSTAT    & -5.248e-01\\
+\end{tabular}  
+\end{center}
+
+Đồ thị biểu thị sự khác nhau giữa giá trị thực tế và giá trị dự đoán của mô hình như sau:
+\begin{center}
+    \includegraphics[scale=0.8]{Problem3_W3.png}
+\end{center}
+ Đồ thị biểu thị residual với các giá trị $y$ như sau:
+ \begin{center}
+ \includegraphics[scale=0.8]{Problem3_2_W3.png}
+ \end{center}
+
+
+%%%%%%%%%%%%%%%% Problem 4
+\section{Problem 4} 
+
+Chứng minh rằng với ma trận $X$ thì $X^TX$ khả nghịch khi X full rank.
+
+\textbf{Solution.} 
+$X$ là full rank, ta cần chứng minh $X$ độc lập tuyến tính.\\
+\begin{align*}
+    &\Rightarrow \vec{v}^T X^T X \vec{v} = \vec{v}^T \overrightarrow{0} \\ &\Rightarrow(X \vec{v})^T X \vec{v} = 0 \\
+    &\Rightarrow (X \vec{v}) \cdot(X \vec{v}) = 0 \\
+    &\Rightarrow X \vec{v} = \overrightarrow{0}
+\end{align*}
+
+Ta có: nếu $\vec{v} \in N\left(X^T X\right): $
+\begin{align*}
+    &\Rightarrow \vec{v} \in N(X)\\
+    & \Rightarrow \vec{v} \text  { chỉ có thể là }  \overrightarrow{0} \\
+    & \Rightarrow N\left(X^T X\right)=N(X)=\{\overrightarrow{0}\}
+\end{align*}
+$\Rightarrow X^T X$ là độc lập tuyến tính; mà $X^T X$ là ma trận vuông $\Rightarrow X^T X$ khả nghịch. 
+\end{document}
