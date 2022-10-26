@@ -1,0 +1,202 @@
+%template by Marcel Neunhoeffer & Sebastian Sternberg - Uni of Mannheim
+
+\documentclass[a4paper, 12pt]{article}  %khai bao document class
+
+% set up margin
+\usepackage[top = 2.5cm, bottom = 2.5cm, left = 2.5cm, right = 2.5cm]{geometry} 
+% \usepackage[utf8]{inputenc}  % language encoder
+\usepackage[utf8]{vietnam}  % vietnamese language setting
+\usepackage{multirow} % Multirow is for tables with multiple rows within one cell.
+\usepackage{booktabs} % For even nicer tables.
+\usepackage{graphicx}
+\usepackage{ulem} % for underlined format
+% packages for advanced math eqn and symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem} % for itemize
+\usepackage[colorlinks=true]{hyperref}
+
+% set indent of new paragraph to 0
+\usepackage{setspace}
+\setlength{\parindent}{0 in}
+\onehalfspacing
+
+% Package to place figures where you want them.
+\usepackage{float}
+
+% The fancyhdr package let's us create nice headers.
+\usepackage{fancyhdr}
+
+%%Make header and footer
+\pagestyle{fancy} % With this command we can customize the header style.
+\fancyhf{} % This makes sure we do not have other information in our header or footer.
+
+% Header
+\lhead{\footnotesize Machine Learning 1: Homework 5}% \lhead puts text in the top left corner. \footnotesize sets our font to a smaller size.
+\rhead{\footnotesize Nguyen Anh Tu @DSEB 62}
+
+% Similar commands work for the footer (\lfoot, \cfoot and \rfoot).
+% We want to put our page number in the center.
+\cfoot{\footnotesize \thepage} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{document}
+
+% Title section of the document
+\thispagestyle{empty} % This command disables the header on the first page. 
+
+\begin{tabular}{p{12.5cm}} % This is a simple tabular environment to align your text nicely 
+{\large \bf National Economics University, Vietnam} \\
+Faculty of Mathematics Economics \\ Data Science in Economics and Business  \\ Machine Learning 1\\
+\hline % \hline produces horizontal lines.
+\\
+\end{tabular} % Our tabular environment ends here.
+
+\vspace*{0.3cm} % Now we want to add some vertical space in between the line and our title.
+
+\begin{center} % Everything within the center environment is centered.
+	{\Large \bf Homework Week 5: Logistic Regression} % <---- Don't forget to put in the right number
+	\vspace{2mm}
+	
+	{\bf Student: Nguyễn Anh Tú - ID: 11207333} % <---- Fill in your names here!
+\end{center}  
+
+%%%%%%%%%%%%%%%% Problem 1:
+\section{Problem 1}
+
+Calculate the gradient vector for loss function of Logistic Regression.
+
+%%%% Solution
+The cross entropy loss function of Logistic Regression is given as:
+\[\mathcal{L} = -\log p(t|w) = -\sum^m_{i=1}\{t^{(i)} \log y^{(i)} + (1 - t^{(i)}) \log (1 - y^{(i)})\}\]
+where $y^{(i)} = \sigma(x^{(i)} w)$ and $t^{(i)} \in \{0, 1\}$. 
+
+Before going to find the gradient vector, we need to prove a property of the sigmoid function which will be useful for the later calculation, that is:
+
+For $\sigma(a) = 1 / (1 + e^{-a})$, then: \[\sigma(a)' = \sigma(a)(1 - \sigma(a))\] Proof:
+\begin{align*}
+    \sigma(a)' &= \left(\frac{1}{1 + e^{-a}}\right)'\\
+    &= (e^{-a})' \cdot \left(\frac{1}{1 + e^{-a}}\right)'\\
+    &= -e^{-a} \cdot \left(- \frac{1}{(1 + e^{-a})^2} \right)\\
+    &= \frac{e^{-a}}{(1 + e^{-a})^2}\\
+    &= \frac{1}{1 + e^{-a}} \cdot \frac{e^{-a}}{1 + e^{-a}}\\
+    &= \frac{1}{1 + e^{-a}} \left(1 - \frac{1}{1 + e^{-a}}\right) \\
+    &= \sigma(a)(1 - \sigma(a))
+\end{align*}
+The partial derivative of $\mathcal{L}$ respected to $w$ is given by:
+\begin{align*}
+    \frac{\partial \mathcal{L} }{\partial w_j} &= -\frac{\partial}{\partial w_j} \sum^m_{i=1} t^{(i)} \log y^{(i)} + (1 - t^{(i)}) \log (1 - y^{(i)})\\
+    &= -\sum^m_{i=1} t^{(i)} \frac{\partial \log (\sigma (x^{(i)} w))}{\partial w_j} + (1 - t^{(i)}) \frac{\partial \log (1 - \sigma(x^{(i)} w))}{\partial w_j} \\
+    &= -\sum^m_{i=1} t^{(i)} \frac{\sigma (x^{(i)} w)(1 - \sigma (x^{(i)} w))}{\sigma (x^{(i)} w)} \cdot \frac{\partial x^{(i)} w}{\partial w_j} -(1-t^{(i)}) \frac{\sigma (x^{(i)} w)(1 - \sigma (x^{(i)} w))}{1 - \sigma (x^{(i)} w)} \frac{\partial x^{(i)} w}{\partial w_j} \\
+    &= -\sum^m_{i=1} t^{(i)} (1 - \sigma (x^{(i)} w_j)) x^{(i)}_j - (1 - t^{(i)}) \sigma (x^{(i)} w_j) x^{(i)}_j \\
+    &= -\sum^m_{i=1} t^{(i)} x^{(i)}_j - t^{(i)} x^{(i)}_j \sigma(x^{(i)} w_j) -\sigma(x^{(i)} w_j)x^{(i)}_j + t^{(i)} x^{(i)}_j \sigma(x^{(i)} w_j) \\
+    &= -\sum^m_{i=1} t^{(i)} x^{(i)}_j -\sigma(x^{(i)} w_j)x^{(i)}_j \\
+    &= \sum^m_{i=1} (\sigma(x^{(i)} w_j) - t^{(i)})x^{(i)}_j
+\end{align*}
+The above result can be re-written in the form of vector calculus to derive the gradient vector for the loss function as:
+\[\frac{d \mathcal{L}}{d W} = X^T (\sigma(X W) - T)\]
+    
+%%%%%%%%%%%%%%%%%%%%% Problem 2:
+\section{Problem 2-4}
+\begin{enumerate}
+    \item Implement a Logistic Regression class which uses Gradient Descent algorithm to find the optimal $w$.
+    \item Fit the model above in the dataset in file \href{https://github.com/nttuan8/DL_Tutorial/blob/master/L2/dataset.csv}{dataset.csv} then find the model coefficient.
+    \item Plot the decision boundary for the dataset.
+\end{enumerate}
+
+\textbf{Solution.} 
+\begin{enumerate}
+    \item Choosing initial $w = \overrightarrow{0}$, the learning rule of Gradient Descent is given by:
+    \[w_{k+1} = w_k - \alpha \frac{d \mathcal{L}}{d w_k}\]
+    where $\alpha$ is learning rate. Iteration is terminated when $w_{k+1}$ and $w_k$ is close enough, i.e. $||w_{k+1} - w_k||$ is smaller than some tolerance $\epsilon$.
+    
+    \item The coefficient found by fitting the dataset to Logistic Regression model is:
+    \begin{center}
+    \begin{tabular}{ |c|c| } 
+    \hline
+    Intercept & -27.53284233 \\ 
+    Salary & 2.75525136 \\ 
+    Experience & 11.87527319 \\ 
+    \hline
+    \end{tabular}
+    \end{center}
+    \item It's important to know how the decision boundary is derived, so we can implement it later. We often choose the separation for two classes is where the probability for each class equals to 0.5 (an input $x$ is predicted to be in class 1 if $p(C1 | x) < 0.5$ and in class 2 if $p(C1 | x) > 0.5$). The posterior probability for a class (in the case of two classes) is $p(C1 | x) = \sigma(a)$ where: \[a = \log \frac{p(x | C1) p(C1)}{p(x |C2) p(C2)}\] 
+    Therefore the decision boundary is the equation $p(C | x) = 0.5$ or $\sigma(x w) = 0.5$ \begin{align*}
+        \sigma(x w) = 0.5 &\Leftrightarrow \frac{1}{1 + e^{-x w}} = \frac{1}{2}\\
+        & \Leftrightarrow e^{-x w} = 1 \\
+        &\Leftrightarrow -x w = 0 \\
+        &\Leftrightarrow w_0 + w_1 x_1 + w_2 x_2 = 0 \\
+        & \Leftrightarrow x_2 = -\frac{w_0}{w_2} - \frac{w_1}{w_2} x_1
+    \end{align*} 
+    Data points and the decision boundary is plotted as:
+    
+    \centering
+    \includegraphics[width=0.8\linewidth]{HW5 output.png}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Problem 3
+\section{Problem 3} Prove that in Logistic Regression Model:
+\begin{enumerate}
+    \item if loss function takes the form of binary cross entropy function, it is convex.
+    \item if loss function takes the form of mean square error, it is non-convex.
+\end{enumerate}
+\textbf{Solution.} To prove that a function is convex, we need to show that its Hessian matrix is positive semi definite (second order derivative characterization of convexity).
+\begin{enumerate}
+    \item Proof of convex loss cross entry function:\\
+    As shown in Problem 1, the first order partial derivative of $\mathcal{L}$ is:
+    \[\frac{\partial \mathcal{L}}{\partial w_j} = \sum^m_{i=1} (\sigma(x^{(i)} w_j) - t^{(i)})x^{(i)}_j\]
+    Then the Hessian matrix entries or the second order derivative of $\mathcal{L}$ is:
+    \begin{align*}
+        \mathbf{H}_{jk} = \frac{\partial^2 \mathcal{L}}{\partial w_j \partial w_k} &= \sum^m_{i=1} \frac{\partial (\sigma(x^{(i)} w_j) - t^{(i)})x^{(i)}_j}{\partial w_k}\\
+        &= \sum^m_{i=1} x_j^{(i)} \sigma(x^{(i)} w_j) (1 - \sigma(x^{(i)} w_j)) \frac{\partial x^{(i)} w_j}{\partial w_k} \\
+        &= \sum^m_{i=1} x_j^{(i)} \sigma(x^{(i)} w_j) (1 - \sigma(x^{(i)} w_j)) x_k^{(i)}
+    \end{align*}
+    Therefore \(\mathbf{H} = X^T \sigma(XW) (1 - \sigma(XW)) X\) \\
+    To show that $\mathbf{H}$ is positive semidefinite, we need to show that the quadratic form of $z^T\mathbf{H}z \geq 0$ for any $z \in \mathbb{R}^n$.
+    \begin{align*}
+    z^T H z & = \sum_{i=1}^m \sum_{j=1}^n \sum_{k=1}^n \sigma(x^{(i)} w_j)(1 - \sigma(x^{(i)} w_j)) x^{(i)}_k x^{(i)}_j z_j  z_k\\
+    & = \sum_{i=1}^m \sigma(x^{(i)} w_j)[1 - \sigma(x^{(i)} w_j)][(x^{(i)})^T z]^2
+    \end{align*}
+
+    Since \(\sigma(a) = 1/(1+e^{-a})\) then \(0 \leq \sigma(a) \leq 1 \). 
+    
+    Therefore:
+    \[\sum_{i=1}^m \sigma(x^{(i)} w_j)[1 - \sigma(x^{(i)} w_j)][(x^{(i)})^T z]^2 \geq 0 \Leftrightarrow z^T \mathbf{H} z \geq 0 \qed\] 
+    
+    \item Proof of non-convex loss MSE:\\
+    If loss function takes the form of MSE, it will be:
+    \[\mathcal{L} = \frac{1}{m} \sum_{i=1}^m (t^{(i)} - \sigma^{(i)})^2 \]
+    The first order derivative of $\mathcal{L}$ is:
+    \begin{align*}
+        \frac{\partial \mathcal{L}}{\partial w_j} &= \frac{1}{m} \sum_{i=1}^m \frac{\partial (t^{(i)} - \sigma^{(i)})^2}{\partial w_j} \\
+        &= -\frac{2}{m} \sum_{i=1}^m (t^{(i)} - \sigma^{(i)}) \frac{\partial \sigma^{(i)}}{\partial w_j}\\
+        &= -\frac{2}{m} \sum_{i=1}^m (t^{(i)} - \sigma^{(i)}) \sigma^{(i)} (1 - \sigma^{(i)}) \frac{\partial x^{(i)} w}{\partial w_j}\\
+        &= -\frac{2}{m} \sum_{i=1}^m (t^{(i)} - \sigma^{(i)}) \sigma^{(i)} (1 - \sigma^{(i)}) x^{(i)}_j\\
+        &= -\frac{2}{m} \sum_{i=1}^m (t^{(i)} \sigma^{(i)} - t^{(i)} (\sigma^{(i)})^2 - (\sigma^{(i)})^2 + (\sigma^{(i)})^3)x^{(i)}_j
+    \end{align*}
+    
+    The second order derivative of $\mathcal{L}$ or the entry of Hessian matrix is:
+    \begin{align*}
+        \mathbf{H}_{jk} = \frac{\partial^2 \mathcal{L}}{\partial w_j \partial w_k} &= -\frac{2}{m} \sum^m_{i=1} \frac{\partial (t^{(i)} \sigma^{(i)} - t^{(i)} (\sigma^{(i)})^2 - (\sigma^{(i)})^2 + (\sigma^{(i)})^3) x^{(i)}_j}{\partial w_k}\\
+        &= -\frac{2}{m} \sum^m_{i=1} x^{(i)}_j (t^{(i)} - 2 t^{(i)} \sigma^{(i)} -2 \sigma^{(i)} + 3(\sigma^{(i)})^2) \frac{\partial \sigma^{(i)}}{\partial w_k} \\
+        &= -\frac{2}{m} \sum^m_{i=1} x^{(i)}_j (t^{(i)} - 2 t^{(i)} \sigma^{(i)} -2 \sigma^{(i)} + 3(\sigma^{(i)})^2) \sigma^{(i)} (1 - \sigma^{(i)})  \frac{\partial x^{(i)} w_j}{\partial w_k}\\
+        &= -\frac{2}{m} \sum^m_{i=1} x^{(i)}_j (t^{(i)} - 2 t^{(i)} \sigma^{(i)} -2 \sigma^{(i)} + 3(\sigma^{(i)})^2) \sigma^{(i)} (1 - \sigma^{(i)}) x^{(i)}_k \\
+        &= -\frac{2}{m} \sum^m_{i=1} x^{(i)}_j x^{(i)}_k \sigma^{(i)} (1 - \sigma^{(i)}) \cdot A
+    \end{align*}
+    for A = \(t^{(i)} - 2 t^{(i)} \sigma^{(i)} -2 \sigma^{(i)} + 3(\sigma^{(i)})^2\).\\
+    The quadratic form $z^T\mathbf{H}z$ for any $z \in \mathbb{R}^n$ is:
+    \[z^T\mathbf{H}z = -\frac{2}{m} \sum_{i=1}^m \sigma(x^{(i)} w_j)[1 - \sigma(x^{(i)} w_j)][(x^{(i)})^T z]^2 \cdot A\]
+    As shown in part 1, \(\sum_{i=1}^m \sigma(x^{(i)} w_j)[1 - \sigma(x^{(i)} w_j)][(x^{(i)})^T z]^2 \geq 0\). Then we need to examine the value of $A$.
+    
+    \textbf{Case 1:} \(t^{(i)} = 0\)
+    \[A = 0 - 2 \cdot 0 \cdot \sigma^{(i)} -2 \sigma^{(i)} + 3(\sigma^{(i)})^2 = -2 \sigma^{(i)} + 3(\sigma^{(i)})^2\]
+    Since $\sigma^{(i)} \in [0, 1]$ then $A \in [{-\frac{1}{3}, 1}] \Rightarrow z^T \mathbf{H}z$ is not positive semidefinite. (1)
+    
+    \textbf{Case 2:} \(t^{(i)} = 1\)
+    \[A = 1 - 2\sigma^{(i)} -2 \sigma^{(i)} + 3(\sigma^{(i)})^2 = 1 -4 \sigma^{(i)} + 3(\sigma^{(i)})^2\]
+    Since $\sigma^{(i)} \in [0, 1]$ then $A \in [{-\frac{1}{3}, 1}] \Rightarrow z^T \mathbf{H}z$ is not positive semidefinite. (2)
+    
+    From (1) and (2) we can conclude that the Hessian matrix of $\mathcal{L}$ is not positive semidefinite so loss MSE is non-convex for Logistic Regression. \qed
+\end{enumerate}
+\end{document}
